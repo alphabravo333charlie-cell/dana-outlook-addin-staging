@@ -1,9 +1,41 @@
+Exit code: 0
+Wall time: 0.5 seconds
+Output:
 <?xml version="1.0" encoding="UTF-8"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailapporcapabilities/1.1" xsi:type="MailApp">
-  <Id>2c8f0d5e-0e3d-4c6e-9a9a-2a9d7d7f5e11</Id><Version>1.0.0.0</Version><ProviderName>Dana POC</ProviderName><DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Dana Outlook Add-in POC" /><Description DefaultValue="Static Outlook add-in proof of concept." /><IconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.svg" /><HighResolutionIconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.svg" /><SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
-  <AppDomains><AppDomain>https://alphabravo333charlie-cell.github.io</AppDomain></AppDomains><Hosts><Host Name="Mailbox" /></Hosts><Requirements><Sets><Set Name="Mailbox" MinVersion="1.6" /></Sets></Requirements>
-  <FormSettings><Form xsi:type="ItemRead"><DesktopSettings><SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form><Form xsi:type="ItemEdit"><DesktopSettings><SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=compose" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form></FormSettings>
-  <Permissions>ReadWriteMailbox</Permissions><Rule xsi:RuleCollection="RuleCollection" Mode="And"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
-  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailapporcapabilities/1.1" xsi:type="VersionOverridesV1_0"><Requirements><bt:Sets DefaultMinVersion="1.6"><bt:Set Name="Mailbox" /></bt:Sets></Requirements><Hosts><Host xsi:type="MailHost"><DesktopFormFactor><ExtensionPoint xsi:type="MessageReadCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ReadGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ReplyButton"><Label resid="Dana.ReplyLabel" /><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Read.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint><ExtensionPoint xsi:type="MessageComposeCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ComposeGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ComposeButton"><Label resid="Dana.ComposeLabel" /><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Compose.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint></DesktopFormFactor></Host></Hosts><Resources><bt:Images><bt:Image id="Icon16" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-16.svg" /><bt:Image id="Icon32" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.svg" /><bt:Image id="Icon80" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.svg" /></bt:Images><bt:Urls><bt:Url id="Read.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><bt:Url id="Compose.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=compose" /></bt:Urls><bt:ShortStrings><bt:String id="Dana.Label" DefaultValue="Dana POC" /><bt:String id="Dana.ReplyLabel" DefaultValue="Reply with Dana" /><bt:String id="Dana.ComposeLabel" DefaultValue="Dana send controls" /></bt:ShortStrings></Resources></VersionOverrides>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+           xsi:type="MailApp">
+  <Id>2c8f0d5e-0e3d-4c6e-9a9a-2a9d7d7f5e11</Id>
+  <Version>1.0.0.1</Version>
+  <ProviderName>Dana POC</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Dana Outlook Add-in POC" />
+  <Description DefaultValue="Static Outlook add-in proof of concept." />
+  <IconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.svg" />
+  <HighResolutionIconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.svg" />
+  <SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
+  <AppDomains><AppDomain>https://alphabravo333charlie-cell.github.io</AppDomain></AppDomains>
+  <Hosts><Host Name="Mailbox" /></Hosts>
+  <Requirements><Sets><Set Name="Mailbox" MinVersion="1.6" /></Sets></Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead"><DesktopSettings><SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form>
+    <Form xsi:type="ItemEdit"><DesktopSettings><SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=compose" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form>
+  </FormSettings>
+  <Permissions>ReadWriteItem</Permissions>
+  <Rule xsi:RuleCollection="RuleCollection" Mode="Or"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements><bt:Sets DefaultMinVersion="1.6"><bt:Set Name="Mailbox" /></bt:Sets></Requirements>
+    <Hosts><Host xsi:type="MailHost"><DesktopFormFactor>
+      <ExtensionPoint xsi:type="MessageReadCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ReadGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ReplyButton"><Label resid="Dana.ReplyLabel" /><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Read.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint>
+      <ExtensionPoint xsi:type="MessageComposeCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ComposeGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ComposeButton"><Label resid="Dana.ComposeLabel" /><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Compose.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint>
+    </DesktopFormFactor></Host></Hosts>
+    <Resources>
+      <bt:Images><bt:Image id="Icon16" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-16.svg" /><bt:Image id="Icon32" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.svg" /><bt:Image id="Icon80" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.svg" /></bt:Images>
+      <bt:Urls><bt:Url id="Read.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><bt:Url id="Compose.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=compose" /></bt:Urls>
+      <bt:ShortStrings><bt:String id="Dana.Label" DefaultValue="Dana POC" /><bt:String id="Dana.ReplyLabel" DefaultValue="Reply with Dana" /><bt:String id="Dana.ComposeLabel" DefaultValue="Dana send controls" /></bt:ShortStrings>
+    </Resources>
+  </VersionOverrides>
 </OfficeApp>
+
