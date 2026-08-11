@@ -1,5 +1,5 @@
 Exit code: 0
-Wall time: 0.5 seconds
+Wall time: 0.4 seconds
 Output:
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
@@ -25,13 +25,11 @@ Output:
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Requirements><bt:Sets DefaultMinVersion="1.6"><bt:Set Name="Mailbox" /></bt:Sets></Requirements>
     <Hosts><Host xsi:type="MailHost"><DesktopFormFactor>
-        <FunctionFile resid="Commands.Url" />
         <ExtensionPoint xsi:type="MessageReadCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ReadGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ReplyButton"><Label resid="Dana.ReplyLabel" /><Supertip><Title resid="Dana.ReplyLabel" /><Description resid="Dana.ReplyLabel" /></Supertip><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Read.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint>
-        <ExtensionPoint xsi:type="MessageComposeCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ComposeGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ComposeButton"><Label resid="Dana.ComposeLabel" /><Supertip><Title resid="Dana.ComposeLabel" /><Description resid="Dana.ComposeLabel" /></Supertip><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Compose.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint>
       </DesktopFormFactor></Host></Hosts>
     <Resources>
         <bt:Images><bt:Image id="Icon16" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /><bt:Image id="Icon32" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /><bt:Image id="Icon80" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /></bt:Images>
-        <bt:Urls><bt:Url id="Read.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><bt:Url id="Compose.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=compose" /><bt:Url id="Commands.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/commands.html" /></bt:Urls>
+        <bt:Urls><bt:Url id="Read.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /></bt:Urls>
         <bt:ShortStrings><bt:String id="Dana.Label" DefaultValue="Dana POC" /><bt:String id="Dana.ReplyLabel" DefaultValue="Reply with Dana" /><bt:String id="Dana.ComposeLabel" DefaultValue="Dana send controls" /></bt:ShortStrings>
     </Resources>
   </VersionOverrides>
