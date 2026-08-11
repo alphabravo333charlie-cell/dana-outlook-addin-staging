@@ -13,8 +13,8 @@ Output:
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Dana Outlook Add-in POC" />
   <Description DefaultValue="Static Outlook add-in proof of concept." />
-  <IconUrl DefaultValue="https://github.githubassets.com/favicons/favicon.png" />
-  <HighResolutionIconUrl DefaultValue="https://github.githubassets.com/favicons/favicon.png" />
+  <IconUrl DefaultValue="https://script-lab.azureedge.net/assets/images/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://script-lab.azureedge.net/assets/images/hi-res-icon.png" />
   <SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
   <AppDomains><AppDomain>https://alphabravo333charlie-cell.github.io</AppDomain></AppDomains>
   <Hosts><Host Name="Mailbox" /></Hosts>
@@ -28,7 +28,7 @@ Output:
         <ExtensionPoint xsi:type="MessageReadCommandSurface"><OfficeTab id="TabDefault"><Group id="Dana.ReadGroup"><Label resid="Dana.Label" /><Control xsi:type="Button" id="Dana.ReplyButton"><Label resid="Dana.ReplyLabel" /><Supertip><Title resid="Dana.ReplyLabel" /><Description resid="Dana.ReplyLabel" /></Supertip><Icon><bt:Image size="16" resid="Icon16" /><bt:Image size="32" resid="Icon32" /><bt:Image size="80" resid="Icon80" /></Icon><Action xsi:type="ShowTaskpane"><SourceLocation resid="Read.Url" /></Action></Control></Group></OfficeTab></ExtensionPoint>
       </DesktopFormFactor></Host></Hosts>
     <Resources>
-        <bt:Images><bt:Image id="Icon16" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /><bt:Image id="Icon32" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /><bt:Image id="Icon80" DefaultValue="https://github.githubassets.com/favicons/favicon.png" /></bt:Images>
+        <bt:Images><bt:Image id="Icon16" DefaultValue="https://script-lab.azureedge.net/assets/images/icon-32.png" /><bt:Image id="Icon32" DefaultValue="https://script-lab.azureedge.net/assets/images/icon-32.png" /><bt:Image id="Icon80" DefaultValue="https://script-lab.azureedge.net/assets/images/hi-res-icon.png" /></bt:Images>
         <bt:Urls><bt:Url id="Read.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /></bt:Urls>
         <bt:ShortStrings><bt:String id="Dana.Label" DefaultValue="Dana POC" /><bt:String id="Dana.ReplyLabel" DefaultValue="Reply with Dana" /><bt:String id="Dana.ComposeLabel" DefaultValue="Dana send controls" /></bt:ShortStrings>
     </Resources>
