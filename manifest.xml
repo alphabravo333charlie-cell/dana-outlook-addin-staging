@@ -1,5 +1,5 @@
 Exit code: 0
-Wall time: 0.4 seconds
+Wall time: 0.5 seconds
 Output:
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
@@ -21,7 +21,7 @@ Output:
   <Requirements><Sets><Set Name="Mailbox" MinVersion="1.6" /></Sets></Requirements>
   <FormSettings><Form xsi:type="ItemRead"><DesktopSettings><SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html?mode=read" /><RequestedHeight>450</RequestedHeight></DesktopSettings></Form></FormSettings>
   <Permissions>ReadWriteItem</Permissions>
-  <Rule xsi:RuleCollection="RuleCollection" Mode="Or"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
+  <Rule xsi:type="RuleCollection" Mode="Or"><Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" /></Rule>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Requirements><bt:Sets DefaultMinVersion="1.6"><bt:Set Name="Mailbox" /></bt:Sets></Requirements>
     <Hosts><Host xsi:type="MailHost"><DesktopFormFactor>
