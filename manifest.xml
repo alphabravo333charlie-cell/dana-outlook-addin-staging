@@ -1,9 +1,14 @@
+Exit code: 0
+Wall time: 0.5 seconds
+Output:
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
            xsi:type="MailApp">
   <Id>2c8f0d5e-0e3d-4c6e-9a9a-2a9d7d7f5e11</Id>
-  <Version>1.0.0.2</Version>
+  <Version>1.0.0.3</Version>
   <ProviderName>Dana POC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Dana Outlook POC" />
@@ -29,7 +34,166 @@
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
     </Form>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html" />
+        <RequestedHeight>450</RequestedHeight>
+      </DesktopSettings>
+    </Form>
   </FormSettings>
-  <Permissions>ReadItem</Permissions>
+  <Permissions>ReadWriteItem</Permissions>
   <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <FunctionFile resid="Commands.Url" />
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="Dana.Group">
+                <Label resid="Dana.GroupLabel" />
+                <Control xsi:type="Button" id="Dana.ReadButton">
+                  <Label resid="Dana.ButtonLabel" />
+                  <Supertip>
+                    <Title resid="Dana.ButtonLabel" />
+                    <Description resid="Dana.ButtonDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16" />
+                    <bt:Image size="32" resid="Icon.32" />
+                    <bt:Image size="80" resid="Icon.80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Dana.Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="Dana.ComposeGroup">
+                <Label resid="Dana.GroupLabel" />
+                <Control xsi:type="Button" id="Dana.ComposeButton">
+                  <Label resid="Dana.ButtonLabel" />
+                  <Supertip>
+                    <Title resid="Dana.ButtonLabel" />
+                    <Description resid="Dana.ButtonDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16" />
+                    <bt:Image size="32" resid="Icon.32" />
+                    <bt:Image size="80" resid="Icon.80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Dana.Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-16.png" />
+        <bt:Image id="Icon.32" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.png" />
+        <bt:Image id="Icon.80" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/commands.html" />
+        <bt:Url id="Dana.Taskpane.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="Dana.GroupLabel" DefaultValue="Dana" />
+        <bt:String id="Dana.ButtonLabel" DefaultValue="Dana" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="Dana.ButtonDescription" DefaultValue="Open the Dana Outlook task pane." />
+      </bt:LongStrings>
+    </Resources>
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.13">
+          <bt:Set Name="Mailbox" />
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <DesktopFormFactor>
+            <FunctionFile resid="Commands.Url" />
+            <ExtensionPoint xsi:type="MessageReadCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="Dana.GroupV11">
+                  <Label resid="Dana.GroupLabel" />
+                  <Control xsi:type="Button" id="Dana.ReadButtonV11">
+                    <Label resid="Dana.ButtonLabel" />
+                    <Supertip>
+                      <Title resid="Dana.ButtonLabel" />
+                      <Description resid="Dana.ButtonDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16" />
+                      <bt:Image size="32" resid="Icon.32" />
+                      <bt:Image size="80" resid="Icon.80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Dana.Taskpane.Url" />
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="Dana.ComposeGroupV11">
+                  <Label resid="Dana.GroupLabel" />
+                  <Control xsi:type="Button" id="Dana.ComposeButtonV11">
+                    <Label resid="Dana.ButtonLabel" />
+                    <Supertip>
+                      <Title resid="Dana.ButtonLabel" />
+                      <Description resid="Dana.ButtonDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16" />
+                      <bt:Image size="32" resid="Icon.32" />
+                      <bt:Image size="80" resid="Icon.80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Dana.Taskpane.Url" />
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon.16" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-16.png" />
+          <bt:Image id="Icon.32" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.png" />
+          <bt:Image id="Icon.80" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.png" />
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="Commands.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/commands.html" />
+          <bt:Url id="Dana.Taskpane.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane.html" />
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="Dana.GroupLabel" DefaultValue="Dana" />
+          <bt:String id="Dana.ButtonLabel" DefaultValue="Dana" />
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="Dana.ButtonDescription" DefaultValue="Open the Dana Outlook task pane." />
+        </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
 </OfficeApp>
+
