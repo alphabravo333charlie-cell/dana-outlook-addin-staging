@@ -2,7 +2,6 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-           xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
            xsi:type="MailApp">
   <Id>2c8f0d5e-0e3d-4c6e-9a9a-2a9d7d7f5e11</Id>
   <Version>1.0.0.3</Version>
@@ -55,28 +54,6 @@
               <Group id="Dana.Group">
                 <Label resid="Dana.GroupLabel" />
                 <Control xsi:type="Button" id="Dana.ReadButton">
-                  <Label resid="Dana.ButtonLabel" />
-                  <Supertip>
-                    <Title resid="Dana.ButtonLabel" />
-                    <Description resid="Dana.ButtonDescription" />
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16" />
-                    <bt:Image size="32" resid="Icon.32" />
-                    <bt:Image size="80" resid="Icon.80" />
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <SourceLocation resid="Dana.Taskpane.Url" />
-                  </Action>
-                </Control>
-              </Group>
-            </OfficeTab>
-          </ExtensionPoint>
-          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
-            <OfficeTab id="TabDefault">
-              <Group id="Dana.ComposeGroup">
-                <Label resid="Dana.GroupLabel" />
-                <Control xsi:type="Button" id="Dana.ComposeButton">
                   <Label resid="Dana.ButtonLabel" />
                   <Supertip>
                     <Title resid="Dana.ButtonLabel" />
