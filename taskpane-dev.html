@@ -7,7 +7,7 @@ Output:
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dana Outlook DEV</title>
-  <style>body{font-family:Segoe UI,Arial,sans-serif;margin:20px;color:#1f1f1f}h1{color:#106ebe;margin-top:0}.status{color:#666}.field{margin:14px 0}.label{font-weight:600;color:#555}.value{white-space:pre-wrap;word-break:break-word;margin-top:4px;background:#f5f5f5;padding:8px;border-radius:4px}.error{color:#a4262c}.mono{font:12px Consolas,monospace}button{margin:4px 6px 12px 0;padding:6px 10px}.proposal{border-left:4px solid #106ebe}</style>
+  <style>body{font-family:Segoe UI,Arial,sans-serif;margin:20px;color:#1f1f1f}h1{color:#106ebe;margin-top:0}.status{color:#666}.field{margin:14px 0}.label{font-weight:600;color:#555}.value{white-space:pre-wrap;word-break:break-word;margin-top:4px;background:#f5f5f5;padding:8px;border-radius:4px}.error{color:#a4262c}.mono{font:12px Consolas,monospace}button{margin:4px 6px 12px 0;padding:6px 10px}.proposal{border-left:4px solid #106ebe}.safety{border-left:4px solid #107c10}.warning{border-left:4px solid #d83b01;color:#a4262c}</style>
 </head>
 <body>
   <h1>Dana DEV â€” selected email</h1>
@@ -50,6 +50,12 @@ Output:
       }
       function showProposal(proposal) {
         currentProposal = { contextMessageId: currentContext && currentContext.messageId, proposedReply: proposal.proposedReply };
+        if (proposal.needsHumanInput === true) {
+          show('Human input required', 'Review this proposal carefully before relying on it.', ' warning');
+          show('Uncertainty reason', proposal.uncertaintyReason || 'The AI identified information that must be confirmed.', ' warning');
+        } else {
+          show('AI safety state', 'Dana has enough information to draft this reply.', ' safety');
+        }
         show('Correlation ID', proposal.correlationId, ' mono');
         show('Proposed reply', proposal.proposedReply, ' proposal');
         var actions = document.createElement('div');
