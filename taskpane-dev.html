@@ -59,7 +59,7 @@ Output:
         document.getElementById('status').textContent = 'Requesting proposalâ€¦';
         var controller = new AbortController();
         var timer = setTimeout(function () { controller.abort(); }, 10000);
-        fetch('https://localhost:3000/dana/draft-reply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentContext), signal: controller.signal })
+        fetch('https://dana-dev-api.ar-tech.cloud/dana/draft-reply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentContext), signal: controller.signal })
           .then(function (response) { if (!response.ok) throw new Error('Backend HTTP ' + response.status); return response.json(); })
           .then(function (proposal) { if (!proposal || typeof proposal.proposedReply !== 'string' || !proposal.proposedReply || typeof proposal.correlationId !== 'string' || !proposal.correlationId) throw new Error('Backend response is missing proposedReply or correlationId.'); showProposal(proposal); document.getElementById('status').textContent = 'Proposal received. No Outlook item was changed.'; })
           .catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = error.name === 'AbortError' ? 'Backend request timed out.' : 'Backend request failed: ' + (error.message || error); })
