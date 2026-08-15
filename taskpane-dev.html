@@ -43,13 +43,43 @@ Output:
         });
       }
       var currentContext = null;
+      var currentProposal = null;
       function buildContext(item, body) {
         var from = item.from || {};
         return { messageId: item.itemId || '', conversationId: item.conversationId || '', sender: { displayName: from.displayName || '', emailAddress: from.emailAddress || '' }, subject: item.subject || '', body: body || '', to: Array.isArray(item.to) ? item.to : [], cc: Array.isArray(item.cc) ? item.cc : [], replyMode: item.cc && item.cc.length ? 'replyAll' : 'reply' };
       }
       function showProposal(proposal) {
+        currentProposal = { contextMessageId: currentContext && currentContext.messageId, proposedReply: proposal.proposedReply };
         show('Correlation ID', proposal.correlationId, ' mono');
         show('Proposed reply', proposal.proposedReply, ' proposal');
+        var actions = document.createElement('div');
+        actions.className = 'field';
+        actions.innerHTML = '<button id="useReply" type="button">Use in Reply</button><button id="useReplyAll" type="button">Use in Reply All</button>';
+        document.getElementById('context').appendChild(actions);
+        document.getElementById('useReply').addEventListener('click', function () { openReply(false); });
+        document.getElementById('useReplyAll').addEventListener('click', function () { openReply(true); });
+      }
+      function openReply(replyAll) {
+        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
+        if (!item || !currentProposal || item.itemId !== currentProposal.contextMessageId) {
+          document.getElementById('status').className = 'error';
+          document.getElementById('status').textContent = 'The selected email changed. Refresh and generate a new proposal before opening Reply.';
+          return;
+        }
+        var method = replyAll ? item.displayReplyAllFormAsync : item.displayReplyFormAsync;
+        if (typeof method !== 'function') {
+          document.getElementById('status').className = 'error';
+          document.getElementById('status').textContent = 'This Outlook client does not expose the native reply form API.';
+          return;
+        }
+        method.call(item, currentProposal.proposedReply, {}, function (result) {
+          if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            document.getElementById('status').className = 'error';
+            document.getElementById('status').textContent = 'Native reply could not be opened: ' + (result.error && result.error.message || 'Unknown error');
+            return;
+          }
+          document.getElementById('status').textContent = replyAll ? 'Native Reply All opened. No message was sent.' : 'Native Reply opened. No message was sent.';
+        });
       }
       function generate() {
         var button = document.getElementById('generate');
@@ -69,6 +99,7 @@ Output:
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
         if (!item) throw new Error('No Outlook item is selected.');
         document.getElementById('context').textContent = '';
+        currentProposal = null;
         document.getElementById('status').className = 'status';
         document.getElementById('status').textContent = 'Reading the selected Outlook itemâ€¦';
         return readBody(item).then(function (body) {
