@@ -72,7 +72,11 @@ Output:
           document.getElementById('status').textContent = 'This Outlook client does not expose the native reply form API.';
           return;
         }
-        method.call(item, currentProposal.proposedReply, {}, function (result) {
+        // Use the documented two-argument overload. Outlook Web preserves the
+        // native quoted thread and places this HTML/text at the top of the
+        // reply form. Passing an empty options object can select an overload
+        // that opens the form without applying the supplied body in some clients.
+        method.call(item, '<div>' + currentProposal.proposedReply.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') + '</div>', function (result) {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             document.getElementById('status').className = 'error';
             document.getElementById('status').textContent = 'Native reply could not be opened: ' + (result.error && result.error.message || 'Unknown error');
