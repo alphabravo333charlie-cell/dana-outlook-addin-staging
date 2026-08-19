@@ -4,11 +4,11 @@
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
            xsi:type="MailApp">
   <Id>933898cb-08f9-4343-a348-29278bafbf0f</Id>
-  <Version>1.0.0.1</Version>
+  <Version>1.0.0.2</Version>
   <ProviderName>Dana POC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Dana Outlook DEV - Delay Test" />
-  <Description DefaultValue="Dana Outlook delayed-delivery development sideload." />
+  <DisplayName DefaultValue="Dana Outlook DEV" />
+  <Description DefaultValue="Dana Outlook DEV technical test harness for AI drafting, native replies, and delayed delivery." />
   <IconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.png" />
   <HighResolutionIconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.png" />
   <SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
@@ -79,9 +79,9 @@
         <bt:Url id="Dana.Dev.Taskpane.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane-dev.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="Dana.Dev.GroupLabel" DefaultValue="Dana DEV Delay" />
-        <bt:String id="Dana.Dev.ButtonLabel" DefaultValue="Dana DEV Delay" />
-        <bt:String id="Dana.Dev.Compose.GroupLabel" DefaultValue="Dana DEV Delay" />
+        <bt:String id="Dana.Dev.GroupLabel" DefaultValue="Dana DEV" />
+        <bt:String id="Dana.Dev.ButtonLabel" DefaultValue="Dana DEV" />
+        <bt:String id="Dana.Dev.Compose.GroupLabel" DefaultValue="Dana DEV" />
         <bt:String id="Dana.Dev.Compose.ButtonLabel" DefaultValue="Send in 2 minutes" />
       </bt:ShortStrings>
       <bt:LongStrings>
