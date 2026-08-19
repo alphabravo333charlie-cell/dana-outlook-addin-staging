@@ -3,12 +3,12 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
            xsi:type="MailApp">
-  <Id>f4c7c3d4-28b4-4f36-a3da-0e4cb7f17e4c</Id>
-  <Version>0.1.0.1</Version>
+  <Id>933898cb-08f9-4343-a348-29278bafbf0f</Id>
+  <Version>1.0.0.1</Version>
   <ProviderName>Dana POC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Dana Outlook DEV" />
-  <Description DefaultValue="Dana Outlook development sideload." />
+  <DisplayName DefaultValue="Dana Outlook DEV - Delay Test" />
+  <Description DefaultValue="Dana Outlook delayed-delivery development sideload." />
   <IconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.png" />
   <HighResolutionIconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.png" />
   <SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
@@ -17,12 +17,6 @@
   <Requirements><Sets><Set Name="Mailbox" MinVersion="1.1" /></Sets></Requirements>
   <FormSettings>
     <Form xsi:type="ItemRead">
-      <DesktopSettings>
-        <SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane-dev.html" />
-        <RequestedHeight>450</RequestedHeight>
-      </DesktopSettings>
-    </Form>
-    <Form xsi:type="ItemEdit">
       <DesktopSettings>
         <SourceLocation DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane-dev.html" />
         <RequestedHeight>450</RequestedHeight>
@@ -85,10 +79,10 @@
         <bt:Url id="Dana.Dev.Taskpane.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane-dev.html" />
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="Dana.Dev.GroupLabel" DefaultValue="Dana DEV" />
-        <bt:String id="Dana.Dev.ButtonLabel" DefaultValue="Dana DEV 1" />
-        <bt:String id="Dana.Dev.Compose.GroupLabel" DefaultValue="Dana DEV" />
-        <bt:String id="Dana.Dev.Compose.ButtonLabel" DefaultValue="Dana DEV schedule" />
+        <bt:String id="Dana.Dev.GroupLabel" DefaultValue="Dana DEV Delay" />
+        <bt:String id="Dana.Dev.ButtonLabel" DefaultValue="Dana DEV Delay" />
+        <bt:String id="Dana.Dev.Compose.GroupLabel" DefaultValue="Dana DEV Delay" />
+        <bt:String id="Dana.Dev.Compose.ButtonLabel" DefaultValue="Send in 2 minutes" />
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="Dana.Dev.Description" DefaultValue="Open the Dana development task pane." />
