@@ -14,6 +14,7 @@ Output:
   <p id="status" class="status">Reading the selected Outlook itemâ€¦</p>
   <button id="refresh" type="button">Refresh selected email</button>
   <button id="generate" type="button" disabled>Generate mock proposal</button>
+  <button id="delay" type="button" hidden disabled>Send in 2 minutes</button>
   <div id="context"></div>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js"></script>
   <script>
@@ -44,6 +45,7 @@ Output:
       }
       var currentContext = null;
       var currentProposal = null;
+      var composeMode = false;
       function buildContext(item, body) {
         var from = item.from || {};
         return { messageId: item.itemId || '', conversationId: item.conversationId || '', sender: { displayName: from.displayName || '', emailAddress: from.emailAddress || '' }, subject: item.subject || '', body: body || '', to: Array.isArray(item.to) ? item.to : [], cc: Array.isArray(item.cc) ? item.cc : [], replyMode: item.cc && item.cc.length ? 'replyAll' : 'reply' };
@@ -105,6 +107,43 @@ Output:
           .catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = error.name === 'AbortError' ? 'Backend request timed out.' : 'Backend request failed: ' + (error.message || error); })
           .finally(function () { clearTimeout(timer); button.disabled = false; });
       }
+      function scheduleInTwoMinutes() {
+        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
+        var delay = item && item.delayDeliveryTime;
+        var button = document.getElementById('delay');
+        if (!delay || typeof delay.setAsync !== 'function') {
+          document.getElementById('status').className = 'error';
+          document.getElementById('status').textContent = 'This Outlook compose item does not expose delayed delivery (Mailbox 1.13 required).';
+          return;
+        }
+        var scheduled = new Date(Date.now() + 2 * 60 * 1000);
+        button.disabled = true;
+        document.getElementById('status').className = 'status';
+        document.getElementById('status').textContent = 'Setting server-side delivery time…';
+        delay.setAsync(scheduled, function (result) {
+          if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            button.disabled = false;
+            document.getElementById('status').className = 'error';
+            document.getElementById('status').textContent = 'Delayed delivery could not be set: ' + (result.error && result.error.message || 'Unknown error');
+            return;
+          }
+          document.getElementById('status').className = 'status';
+          document.getElementById('status').textContent = 'Scheduled for ' + scheduled.toLocaleString() + '. Review the compose item, then click Outlook’s native Send once.';
+        });
+      }
+      function openComposeHarness() {
+        composeMode = true;
+        currentContext = null;
+        currentProposal = null;
+        document.getElementById('refresh').hidden = true;
+        document.getElementById('generate').hidden = true;
+        document.getElementById('delay').hidden = false;
+        document.getElementById('delay').disabled = false;
+        document.getElementById('context').textContent = '';
+        document.getElementById('status').className = 'status';
+        document.getElementById('status').textContent = 'Compose mode. Review/edit the real Outlook message, then choose Send in 2 minutes. Native Outlook Send is still required.';
+        document.getElementById('delay').addEventListener('click', scheduleInTwoMinutes);
+      }
       function read() {
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
         if (!item) throw new Error('No Outlook item is selected.');
@@ -131,6 +170,11 @@ Output:
       }
       Office.onReady(function (info) {
         if (info.host !== Office.HostType.Outlook) { document.getElementById('status').textContent = 'Not running inside Outlook.'; return; }
+        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
+        if (item && item.delayDeliveryTime && typeof item.delayDeliveryTime.setAsync === 'function') {
+          openComposeHarness();
+          return;
+        }
         document.getElementById('refresh').addEventListener('click', function () { currentContext = null; document.getElementById('generate').disabled = true; read().catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = 'Read failed: ' + text(error && error.message || error); }); });
         document.getElementById('generate').addEventListener('click', generate);
         read().catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = 'Read failed: ' + text(error && error.message || error); });
