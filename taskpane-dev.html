@@ -1,39 +1,58 @@
-Exit code: 0
-Wall time: 0.5 seconds
-Output:
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dana Outlook DEV</title>
-  <style>body{font-family:Segoe UI,Arial,sans-serif;margin:20px;color:#1f1f1f}h1{color:#106ebe;margin-top:0}.status{color:#666}.field{margin:14px 0}.label{font-weight:600;color:#555}.value{white-space:pre-wrap;word-break:break-word;margin-top:4px;background:#f5f5f5;padding:8px;border-radius:4px}.error{color:#a4262c}.mono{font:12px Consolas,monospace}button{margin:4px 6px 12px 0;padding:6px 10px}.proposal{border-left:4px solid #106ebe}.safety{border-left:4px solid #107c10}.warning{border-left:4px solid #d83b01;color:#a4262c}</style>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;margin:20px;color:#1f1f1f}
+    h1{color:#106ebe;margin:0 0 12px}
+    .status{color:#555;font-size:16px}.error{color:#a4262c}
+    button{margin-top:12px;padding:7px 14px}
+    .spinner{display:inline-block;width:13px;height:13px;margin-right:8px;border:2px solid #c7e0f4;border-top-color:#106ebe;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
 </head>
 <body>
-  <h1>Dana DEV â€” selected email</h1>
-  <p id="status" class="status">Reading the selected Outlook itemâ€¦</p>
-  <button id="refresh" type="button">Refresh selected email</button>
-  <button id="generate" type="button" disabled>Generate mock proposal</button>
-  <button id="delay" type="button" hidden disabled>Send in 15 minutes</button>
-  <div id="context"></div>
+  <h1>Dana</h1>
+  <p id="status" class="status"><span class="spinner" aria-hidden="true"></span>Drafting reply…</p>
+  <button id="retry" type="button" hidden>Retry</button>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js"></script>
   <script>
     (function () {
-      function text(value) { return value == null || value === '' ? '(empty)' : String(value); }
-      function recipients(list) {
-        return Array.isArray(list) && list.length
-          ? list.map(function (r) { return (r.displayName ? r.displayName + ' ' : '') + '<' + (r.emailAddress || '') + '>'; }).join('; ')
-          : '(none)';
-      }
+      var ENDPOINT = 'https://dana-dev-api.ar-tech.cloud/dana/draft-reply';
+      var currentContext = null;
+      var running = false;
+
       function htmlToText(html) {
         var doc = new DOMParser().parseFromString(html || '', 'text/html');
-        return (doc.body && doc.body.textContent || '').replace(/\\u00a0/g, ' ').replace(/\\r\\n?/g, '\\n').trim();
+        return (doc.body && doc.body.textContent || '').replace(/\u00a0/g, ' ').replace(/\r\n?/g, '\n').trim();
       }
-      function show(label, value, extra) {
-        var row = document.createElement('div'); row.className = 'field';
-        var name = document.createElement('div'); name.className = 'label'; name.textContent = label;
-        var val = document.createElement('div'); val.className = 'value' + (extra || ''); val.textContent = text(value);
-        row.appendChild(name); row.appendChild(val); document.getElementById('context').appendChild(row);
+      function escapeHtml(value) {
+        return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+      function proposalHtml(proposal) {
+        var source = String(proposal.proposedReply || '');
+        var marker = /\[\[HUMAN_INPUT:([\s\S]*?)\]\]/g;
+        if (proposal.needsHumanInput === true && !marker.test(source)) {
+          var instruction = String(proposal.uncertaintyReason || 'Confirm the missing information before sending.').trim();
+          var inlineMarker = '[[HUMAN_INPUT:Human input required — ' + instruction + ']]';
+          var closing = /(^|\n)(?=Best regards|Kind regards|Regards|Sincerely|Thank you)/i;
+          source = closing.test(source)
+            ? source.replace(closing, '$1' + inlineMarker + '\n\n')
+            : source + '\n\n' + inlineMarker;
+        }
+        marker.lastIndex = 0;
+        var cursor = 0, found = false, html = '', match;
+        while ((match = marker.exec(source)) !== null) {
+          found = true;
+          html += escapeHtml(source.slice(cursor, match.index));
+          html += '<span style="color:#c00000;font-weight:600">' + escapeHtml(match[1].trim()) + '</span>';
+          cursor = marker.lastIndex;
+        }
+        html += escapeHtml(source.slice(cursor));
+        if (proposal.needsHumanInput === true && !found) throw new Error('Dana could not place the required confirmation in the draft.');
+        return '<div>' + html.replace(/\n/g, '<br>') + '</div>';
       }
       function readBody(item) {
         return new Promise(function (resolve, reject) {
@@ -43,144 +62,78 @@ Output:
           });
         });
       }
-      var currentContext = null;
-      var currentProposal = null;
-      var composeMode = false;
       function buildContext(item, body) {
         var from = item.from || {};
-        return { messageId: item.itemId || '', conversationId: item.conversationId || '', sender: { displayName: from.displayName || '', emailAddress: from.emailAddress || '' }, subject: item.subject || '', body: body || '', to: Array.isArray(item.to) ? item.to : [], cc: Array.isArray(item.cc) ? item.cc : [], replyMode: item.cc && item.cc.length ? 'replyAll' : 'reply' };
+        return {
+          messageId: item.itemId || '', conversationId: item.conversationId || '',
+          sender: { displayName: from.displayName || '', emailAddress: from.emailAddress || '', name: from.displayName || '', address: from.emailAddress || '' },
+          subject: item.subject || '', body: body || '',
+          to: Array.isArray(item.to) ? item.to : [], cc: Array.isArray(item.cc) ? item.cc : [], replyMode: 'replyAll'
+        };
       }
-      function showProposal(proposal) {
-        currentProposal = { contextMessageId: currentContext && currentContext.messageId, proposedReply: proposal.proposedReply };
-        if (proposal.needsHumanInput === true) {
-          show('Human input required', 'Review this proposal carefully before relying on it.', ' warning');
-          show('Uncertainty reason', proposal.uncertaintyReason || 'The AI identified information that must be confirmed.', ' warning');
-        } else {
-          show('AI safety state', 'Dana has enough information to draft this reply.', ' safety');
-        }
-        show('Correlation ID', proposal.correlationId, ' mono');
-        show('Proposed reply', proposal.proposedReply, ' proposal');
-        var actions = document.createElement('div');
-        actions.className = 'field';
-        actions.innerHTML = '<button id="useReply" type="button">Use in Reply</button><button id="useReplyAll" type="button">Use in Reply All</button>';
-        document.getElementById('context').appendChild(actions);
-        document.getElementById('useReply').addEventListener('click', function () { openReply(false); });
-        document.getElementById('useReplyAll').addEventListener('click', function () { openReply(true); });
+      function setDrafting() {
+        document.getElementById('status').className = 'status';
+        document.getElementById('status').innerHTML = '<span class="spinner" aria-hidden="true"></span>Drafting reply…';
+        document.getElementById('retry').hidden = true;
       }
-      function openReply(replyAll) {
-        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
-        if (!item || !currentProposal || item.itemId !== currentProposal.contextMessageId) {
-          document.getElementById('status').className = 'error';
-          document.getElementById('status').textContent = 'The selected email changed. Refresh and generate a new proposal before opening Reply.';
-          return;
-        }
-        var method = replyAll ? item.displayReplyAllFormAsync : item.displayReplyFormAsync;
-        if (typeof method !== 'function') {
-          document.getElementById('status').className = 'error';
-          document.getElementById('status').textContent = 'This Outlook client does not expose the native reply form API.';
-          return;
-        }
-        // Use the documented two-argument overload. Outlook Web preserves the
-        // native quoted thread and places this HTML/text at the top of the
-        // reply form. Passing an empty options object can select an overload
-        // that opens the form without applying the supplied body in some clients.
-        method.call(item, '<div>' + currentProposal.proposedReply.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') + '</div>', function (result) {
-          if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            document.getElementById('status').className = 'error';
-            document.getElementById('status').textContent = 'Native reply could not be opened: ' + (result.error && result.error.message || 'Unknown error');
-            return;
-          }
-          document.getElementById('status').textContent = replyAll ? 'Native Reply All opened. No message was sent.' : 'Native Reply opened. No message was sent.';
+      function setError(message) {
+        document.getElementById('status').className = 'error';
+        document.getElementById('status').textContent = message || 'Dana could not draft this reply.';
+        document.getElementById('retry').hidden = false;
+      }
+      function openNativeReply(item, proposal) {
+        if (!currentContext || item.itemId !== currentContext.messageId) throw new Error('The selected email changed. Please try Dana again on the current email.');
+        if (typeof item.displayReplyAllFormAsync !== 'function') throw new Error('Native Outlook Reply is unavailable in this client.');
+        var html = proposalHtml(proposal);
+        return new Promise(function (resolve, reject) {
+          item.displayReplyAllFormAsync(html, function (result) {
+            if (result.status !== Office.AsyncResultStatus.Succeeded) return reject(result.error || new Error('Native reply could not be opened.'));
+            resolve();
+          });
         });
       }
-      function generate() {
-        var button = document.getElementById('generate');
-        if (!currentContext) return;
-        button.disabled = true;
-        document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = 'Requesting proposalâ€¦';
+      function generateAndReply() {
+        if (running) return;
+        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
+        if (!item) { setError('Open an email, then try Dana again.'); return; }
+        running = true; currentContext = null; setDrafting();
         var controller = new AbortController();
-        var timer = setTimeout(function () { controller.abort(); }, 10000);
-        fetch('https://dana-dev-api.ar-tech.cloud/dana/draft-reply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentContext), signal: controller.signal })
-          .then(function (response) { if (!response.ok) throw new Error('Backend HTTP ' + response.status); return response.json(); })
-          .then(function (proposal) { if (!proposal || typeof proposal.proposedReply !== 'string' || !proposal.proposedReply || typeof proposal.correlationId !== 'string' || !proposal.correlationId) throw new Error('Backend response is missing proposedReply or correlationId.'); showProposal(proposal); document.getElementById('status').textContent = 'Proposal received. No Outlook item was changed.'; })
-          .catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = error.name === 'AbortError' ? 'Backend request timed out.' : 'Backend request failed: ' + (error.message || error); })
-          .finally(function () { clearTimeout(timer); button.disabled = false; });
+        var timer = setTimeout(function () { controller.abort(); }, 20000);
+        readBody(item)
+          .then(function (body) {
+            currentContext = buildContext(item, body);
+            return fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentContext), signal: controller.signal });
+          })
+          .then(function (response) { if (!response.ok) throw new Error('Dana could not draft this reply.'); return response.json(); })
+          .then(function (proposal) {
+            if (!proposal || typeof proposal.proposedReply !== 'string' || !proposal.proposedReply) throw new Error('Dana returned an incomplete draft.');
+            return openNativeReply(item, proposal);
+          })
+          .then(function () { document.getElementById('status').className = 'status'; document.getElementById('status').textContent = 'Reply opened in Outlook.'; })
+          .catch(function (error) { setError(error && error.name === 'AbortError' ? 'Dana took too long to respond. Please try again.' : (error && error.message || 'Dana could not draft this reply.')); })
+          .finally(function () { clearTimeout(timer); running = false; });
       }
-      function scheduleInFifteenMinutes() {
+
+      // Preserved for a future optional scheduling UX. It is intentionally not exposed in the default Dana flow.
+      function scheduleInFifteenMinutes(callback) {
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
         var delay = item && item.delayDeliveryTime;
-        var button = document.getElementById('delay');
-        if (!delay || typeof delay.setAsync !== 'function') {
-          document.getElementById('status').className = 'error';
-          document.getElementById('status').textContent = 'This Outlook compose item does not expose delayed delivery (Mailbox 1.13 required).';
-          return;
-        }
-        var scheduled = new Date(Date.now() + 15 * 60 * 1000);
-        button.disabled = true;
-        document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = 'Setting server-side delivery time…';
-        delay.setAsync(scheduled, function (result) {
-          if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            button.disabled = false;
-            document.getElementById('status').className = 'error';
-            document.getElementById('status').textContent = 'Delayed delivery could not be set: ' + (result.error && result.error.message || 'Unknown error');
-            return;
-          }
-          document.getElementById('status').className = 'status';
-          document.getElementById('status').textContent = 'Scheduled for ' + scheduled.toLocaleString() + '. Review the compose item, then click Outlook’s native Send once.';
-        });
+        if (!delay || typeof delay.setAsync !== 'function') { callback(new Error('Delayed delivery is unavailable.')); return; }
+        delay.setAsync(new Date(Date.now() + 15 * 60 * 1000), function (result) { callback(result.status === Office.AsyncResultStatus.Succeeded ? null : result.error); });
       }
-      function openComposeHarness() {
-        composeMode = true;
-        currentContext = null;
-        currentProposal = null;
-        document.getElementById('refresh').hidden = true;
-        document.getElementById('generate').hidden = true;
-        document.getElementById('delay').hidden = false;
-        document.getElementById('delay').disabled = false;
-        document.getElementById('context').textContent = '';
-        document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = 'Compose mode. Review/edit the real Outlook message, then choose Send in 15 minutes. Native Outlook Send is still required.';
-        document.getElementById('delay').addEventListener('click', scheduleInFifteenMinutes);
-      }
-      function read() {
-        var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
-        if (!item) throw new Error('No Outlook item is selected.');
-        document.getElementById('context').textContent = '';
-        currentProposal = null;
-        document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = 'Reading the selected Outlook itemâ€¦';
-        return readBody(item).then(function (body) {
-          var from = item.from || {};
-          currentContext = buildContext(item, body);
-          show('Sender', (from.displayName || '(unknown)') + ' <' + (from.emailAddress || '(unknown)') + '>');
-          show('Subject', item.subject);
-          show('To', recipients(item.to));
-          show('CC', recipients(item.cc));
-          show('Body (HTML converted to text)', body, ' body');
-          show('Item ID', item.itemId, ' mono');
-          show('Conversation / thread ID', item.conversationId || '(not exposed)', ' mono');
-          show('Created', item.dateTimeCreated);
-          show('Modified', item.dateTimeModified);
-          show('Reply All indication', item.cc && item.cc.length ? 'CC present â€” Reply All would preserve CC.' : 'No CC exposed â€” Reply may be sufficient.');
-          document.getElementById('generate').disabled = false;
-          document.getElementById('status').textContent = 'Read-only capture complete. No email was changed.';
-        });
-      }
+
       Office.onReady(function (info) {
-        if (info.host !== Office.HostType.Outlook) { document.getElementById('status').textContent = 'Not running inside Outlook.'; return; }
+        if (info.host !== Office.HostType.Outlook) { setError('Dana must be opened from Outlook.'); return; }
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
         if (item && item.delayDeliveryTime && typeof item.delayDeliveryTime.setAsync === 'function') {
-          openComposeHarness();
+          document.getElementById('status').className = 'status';
+          document.getElementById('status').textContent = 'Review and send this reply using Outlook.';
           return;
         }
-        document.getElementById('refresh').addEventListener('click', function () { currentContext = null; document.getElementById('generate').disabled = true; read().catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = 'Read failed: ' + text(error && error.message || error); }); });
-        document.getElementById('generate').addEventListener('click', generate);
-        read().catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = 'Read failed: ' + text(error && error.message || error); });
+        document.getElementById('retry').addEventListener('click', generateAndReply);
+        generateAndReply();
       });
     }());
   </script>
 </body>
 </html>
-
