@@ -14,7 +14,7 @@ Output:
   <p id="status" class="status">Reading the selected Outlook itemâ€¦</p>
   <button id="refresh" type="button">Refresh selected email</button>
   <button id="generate" type="button" disabled>Generate mock proposal</button>
-  <button id="delay" type="button" hidden disabled>Send in 2 minutes</button>
+  <button id="delay" type="button" hidden disabled>Send in 15 minutes</button>
   <div id="context"></div>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js"></script>
   <script>
@@ -107,7 +107,7 @@ Output:
           .catch(function (error) { document.getElementById('status').className = 'error'; document.getElementById('status').textContent = error.name === 'AbortError' ? 'Backend request timed out.' : 'Backend request failed: ' + (error.message || error); })
           .finally(function () { clearTimeout(timer); button.disabled = false; });
       }
-      function scheduleInTwoMinutes() {
+      function scheduleInFifteenMinutes() {
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
         var delay = item && item.delayDeliveryTime;
         var button = document.getElementById('delay');
@@ -116,7 +116,7 @@ Output:
           document.getElementById('status').textContent = 'This Outlook compose item does not expose delayed delivery (Mailbox 1.13 required).';
           return;
         }
-        var scheduled = new Date(Date.now() + 2 * 60 * 1000);
+        var scheduled = new Date(Date.now() + 15 * 60 * 1000);
         button.disabled = true;
         document.getElementById('status').className = 'status';
         document.getElementById('status').textContent = 'Setting server-side delivery time…';
@@ -141,8 +141,8 @@ Output:
         document.getElementById('delay').disabled = false;
         document.getElementById('context').textContent = '';
         document.getElementById('status').className = 'status';
-        document.getElementById('status').textContent = 'Compose mode. Review/edit the real Outlook message, then choose Send in 2 minutes. Native Outlook Send is still required.';
-        document.getElementById('delay').addEventListener('click', scheduleInTwoMinutes);
+        document.getElementById('status').textContent = 'Compose mode. Review/edit the real Outlook message, then choose Send in 15 minutes. Native Outlook Send is still required.';
+        document.getElementById('delay').addEventListener('click', scheduleInFifteenMinutes);
       }
       function read() {
         var item = Office.context && Office.context.mailbox && Office.context.mailbox.item;
