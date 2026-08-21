@@ -4,7 +4,7 @@
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
            xsi:type="MailApp">
   <Id>933898cb-08f9-4343-a348-29278bafbf0f</Id>
-  <Version>1.0.0.2</Version>
+  <Version>1.0.0.3</Version>
   <ProviderName>Dana POC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Dana Outlook DEV" />
@@ -43,7 +43,7 @@
                     <bt:Image size="32" resid="Icon.32" />
                     <bt:Image size="80" resid="Icon.80" />
                   </Icon>
-                  <Action xsi:type="ShowTaskpane"><SourceLocation resid="Dana.Dev.Taskpane.Url" /></Action>
+                  <Action xsi:type="ExecuteFunction"><FunctionName>draftReply</FunctionName></Action>
                 </Control>
               </Group>
             </OfficeTab>
@@ -76,6 +76,7 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/commands.html" />
+        <bt:Url id="Commands.Dev.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/commands-dev.js" />
         <bt:Url id="Dana.Dev.Taskpane.Url" DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/taskpane-dev.html" />
       </bt:Urls>
       <bt:ShortStrings>
