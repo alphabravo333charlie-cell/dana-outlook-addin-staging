@@ -4,11 +4,11 @@
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
            xsi:type="MailApp">
   <Id>933898cb-08f9-4343-a348-29278bafbf0f</Id>
-  <Version>1.0.0.3</Version>
+  <Version>1.0.0.4</Version>
   <ProviderName>Dana POC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Dana Outlook DEV" />
-  <Description DefaultValue="Dana Outlook DEV technical test harness for AI drafting, native replies, and delayed delivery." />
+  <DisplayName DefaultValue="Dana Outlook DEV — One-Click Draft Spike" />
+  <Description DefaultValue="Dana Outlook DEV one-click ExecuteFunction drafting spike with review notes." />
   <IconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-32.png" />
   <HighResolutionIconUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/assets/icon-80.png" />
   <SupportUrl DefaultValue="https://alphabravo333charlie-cell.github.io/dana-outlook-addin-staging/" />
